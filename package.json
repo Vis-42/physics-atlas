@@ -1,0 +1,33 @@
+{
+  "name": "netwrk-physics-atlas",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "data": "node scripts/fetch-data.mjs && node scripts/fetch-people.mjs && node scripts/fetch-links.mjs && node scripts/fetch-authors.mjs && node scripts/verify-people.mjs && node scripts/apply-people.mjs && node scripts/build-analysis.mjs && node scripts/build-index.mjs && node scripts/build-atlas.mjs",
+    "deploy": "sh scripts/deploy-gh-pages.sh",
+    "build": "next build",
+    "verify": "node scripts/fetch-authors.mjs && node scripts/verify-people.mjs",
+    "data:frontier": "node scripts/fetch-frontier.mjs",
+    "test": "node tests/edge-connections.mjs && node tests/researcher-data.mjs",
+    "test:browser": "node tests/researcher-ui.cjs && node tests/researcher-races.cjs",
+    "test:data": "node tests/frontier-snapshots.mjs"
+  },
+  "dependencies": {
+    "@fontsource/eb-garamond": "^5.1.0",
+    "@fontsource/ibm-plex-mono": "^5.1.0",
+    "@fontsource/newsreader": "^5.3.0",
+    "@fontsource/public-sans": "^5.1.0",
+    "d3-contour": "^4.0.2",
+    "d3-force": "^3.0.0",
+    "d3-geo": "^3.1.1",
+    "d3-interpolate": "^3.0.1",
+    "d3-selection": "^3.0.0",
+    "d3-shape": "^3.2.0",
+    "d3-zoom": "^3.0.0",
+    "next": "^15.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  }
+}

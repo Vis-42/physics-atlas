@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+# OpenAlex answers and the API key live here: never commit
+.cache
+.DS_Store
+
+.env
+.env.*
+*.log

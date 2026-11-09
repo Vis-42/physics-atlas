@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const moduleURL=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');
+const theme=moduleURL(fs.readFileSync(new URL('../lib/theme.js',import.meta.url),'utf8'));
+const phase=fs.readFileSync(new URL('../lib/phase.js',import.meta.url),'utf8').replace("'./theme'",JSON.stringify(theme));
+const {loadNet}=await import(moduleURL(phase));
+const W={uniById:new Map(),countryById:new Map([['US',{lng:-95,lat:38}]]),projection:ll=>ll};
+const career={people:[['A1','Career person','I1','Lab','US',99,5000]],links:[]};
+const frontier={meta:{asOf:'2026-11-09'},people:[{id:'A2',name:'Recent person',iid:'I2',iname:'New lab',cc:'US',h:3,cites:20,score:8,recentPapers:4},{id:'A3',name:'No location',iid:'',iname:'Unknown',cc:'',h:1,score:2,recentPapers:1}],links:[[0,1,2]]};
+let fail=false,missing=false,calls=[];
+globalThis.fetch=async url=>{calls.push(url);if(url.endsWith('insts.json'))return{json:async()=>[]};if(fail)return{status:503,ok:false};if(missing)return{status:404,ok:false};return{status:200,ok:true,json:async()=>url.includes('/frontier/')?frontier:career}};
+const ph={kind:'subfield',id:1};const old=await loadNet('data',W,ph,'career');const recent=await loadNet('data',W,ph,'frontier');
+assert.equal(old.people[0].score,99);assert.equal(recent.people[0].score,8);assert.equal(recent.people[0].h,3);assert.equal(recent.people[0].locationApproximate,true);assert.equal(recent.people[1].x,null);assert.equal(recent.people.length,2);assert.equal(recent.links[0].b.id,'A3');assert(calls.includes('data/frontier/s1.json'));
+fail=true;await assert.rejects(loadNet('data',W,{...ph,id:2},'frontier'));fail=false;assert((await loadNet('data',W,{...ph,id:2},'frontier')).people.length);
+missing=true;assert.equal(await loadNet('data',W,{...ph,id:3},'frontier'),null);missing=false;assert((await loadNet('data',W,{...ph,id:3},'frontier')).people.length);
+assert.equal(await loadNet('data',W,{kind:'field',id:1},'frontier'),null);
+console.log('PASS: separate career/recent scores and caches, unresolved locations, sampled links, retry and missing-data recovery');
