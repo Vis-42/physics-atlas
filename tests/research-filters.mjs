@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';
+import {normalizeFilters,toggleFilter,currentOpportunities,intersectNetworks} from '../lib/research-filters.mjs';
+assert.equal(normalizeFilters('open+career+frontier+career'),'career+frontier+open');assert.equal(normalizeFilters('bad'),'institutions');assert.equal(toggleFilter('career','frontier'),'career+frontier');assert.equal(toggleFilter('career+frontier','career'),'frontier');assert.equal(toggleFilter('open','open'),'institutions');
+const evidence={status:'open',checkedAt:'2026-11-10',reviewBy:'2027-02-08',source:'https://example.edu/join',evidence:'advertised'};
+const p={opportunities:[evidence,{...evidence,status:'closed'},{...evidence,deadline:'2026-11-09'},{...evidence,reviewBy:'2026-11-09'},{...evidence,checkedAt:'2026-11-11'},{...evidence,source:'javascript:alert(1)'}]};assert.equal(currentOpportunities(p,'2026-11-10').length,1);assert.equal(currentOpportunities({opportunities:[evidence]},'2027-02-09').length,0);
+const a={id:'A1',name:'Shared name',score:80,h:80,cites:100,iid:'old'},b={id:'A2',name:'Shared name',score:70},c={id:'A3',score:40};
+const career={people:[a,b,c],links:[{a,b,n:4},{a,b:c,n:3}],meta:{}};
+const frontier={people:[{...a,score:12,recentPapers:5},{...b,score:9}],links:[{a,b,n:6}],meta:{start:'2023-11-10'}};
+const open={people:[{...a,iid:'verified',h:99,score:2,opportunities:[evidence]},b],links:[],meta:{reviewed:2}};
+let n=intersectNetworks([career,frontier],'career+frontier');assert.deepEqual(n.people.map(p=>p.id),['A1','A2']);assert.equal(n.people[0].score,12);assert.equal(n.links.length,1);assert.equal(n.links[0].n,6);assert.equal(n.links[0].a,n.people[0]);
+n=intersectNetworks([career,frontier,open],'career+frontier+open');assert.equal(n.people[0].iid,'verified');assert.equal(n.people[0].score,12);assert.equal(n.people[0].h,80);assert.equal(n.meta.openCoverage.reviewed,2);assert.equal(intersectNetworks([career,null],'career+open').people.length,0);
+const catalog=JSON.parse(fs.readFileSync(new URL('../data/recruitment-evidence.json',import.meta.url)));const snapshots=fs.readdirSync(new URL('../public/data/open/',import.meta.url));assert.equal(snapshots.length,252);
+for(const file of snapshots){const d=JSON.parse(fs.readFileSync(new URL('../public/data/open/'+file,import.meta.url)));assert.equal(new Set(d.people.map(p=>p.id)).size,d.people.length);for(const p of d.people){assert(Number.isFinite(p.lat)&&Number.isFinite(p.lng));for(const o of p.opportunities){assert(o.subfields.includes(file.slice(1,-5)));assert((Date.parse(o.reviewBy)-Date.parse(o.checkedAt))/86400000<=90);assert(currentOpportunities({opportunities:[o]},catalog.asOf).length===1);}}}
+console.log('PASS: intersections, metric preservation, identity matching, duplicate edges, expiration, 252 recruitment snapshots');

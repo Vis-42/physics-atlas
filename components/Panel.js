@@ -6,6 +6,8 @@ import { loadHeat, makePhase, isMeasured } from '../lib/phase';
 import { FAM_NAME, YEARS, YEARS_LONG } from '../lib/theme';
 import { fmt, fmtShort } from '../lib/util';
 import { useAtlas } from './Controls';
+import { FILTER_LABELS } from '../lib/research-filters.mjs';
+import { OpenEvidence, OpenCoverage } from './OpenEvidence';
 import { InstitutionEvidence, CountryStrengths } from './EvidencePanels';
 
 const hue = (fam) => A.skin.hue[fam] || A.skin.neutral;
@@ -144,33 +146,40 @@ function World() {
 }
 // Researcher mode has its own panel; no institutional rankings or country totals.
 function ResearchPanel() {
-  const recent = A.researchMode === 'frontier', net = A.net;
-  const title = recent ? 'Frontier now' : 'Career leaders';
+  const filters=A.researchMode.split('+'), recent=filters.includes('frontier'), career=filters.includes('career'), open=filters.includes('open'), combined=filters.length>1, net=A.net;
+  const title=filters.map(f=>combined?({career:'Career',frontier:'Frontier',open:'Open'})[f]:FILTER_LABELS[f]).join(' ∩ ');
+  const coverage=net?.meta?.openCoverage || (A.researchMode==='open'?net?.meta:null);
   const heading = <><p className="kick">Researchers · {A.phase.short}</p><h1>{title}</h1></>;
   const back = <div className="research-actions"><button onClick={() => setResearchMode('institutions')}>Back to institutions</button></div>;
   if (A.netStatus === 'loading') return <>{heading}<p role="status" className="lede">Loading researcher evidence…</p>{back}</>;
   if (A.netStatus === 'error') return <>{heading}<p role="alert" className="lede">Researcher data couldn’t be loaded. Your map is still available.</p><div className="research-actions"><button onClick={() => setResearchMode(A.researchMode, {retry:true})}>Retry</button></div>{back}</>;
-  if (!net?.people.length) return <>{heading}<p className="lede">{recent ? 'No eligible researchers are available in this subfield’s recent snapshot yet.' : 'A career researcher snapshot is not available for this subfield yet.'}</p>{back}</>;
+  if (!net?.people.length) return <>{heading}{open&&<OpenCoverage meta={coverage}/>}<p className="lede">{open||combined ? 'No verified matches for every selected filter in the current sample. This does not mean no researchers are recruiting.' : recent ? 'No eligible researchers are available in this subfield’s recent snapshot yet.' : 'A career researcher snapshot is not available for this subfield yet.'}</p>{back}</>;
   const top = net.people.slice().sort((a,b)=>b.score-a.score || (b.recentPapers||0)-(a.recentPapers||0));
   const selected = A.netSel && net.people.includes(A.netSel) ? A.netSel : null;
   const pairs = net.links.filter(l=>!selected || l.a===selected || l.b===selected).sort((a,b)=>b.n-a.n).slice(0,8);
   const unmapped = net.people.filter(p=>p.x==null).length;
   return <>{heading}
-    <p className="lede">{recent ? 'Researchers producing high-impact work recently and publishing in this subfield within the last 12 months.' : 'Established researchers, ranked by career h-index within the existing most-cited candidate set.'}</p>
+    {combined&&<p className="note">Intersection: every researcher below appears in each selected sample. {Object.entries(net.meta.counts||{}).map(([k,v])=>FILTER_LABELS[k]+': '+v).join(' · ')}.</p>}
+    {open&&<OpenCoverage meta={coverage}/>}
+    <p className="lede">{!recent&&!career ? 'Researchers with dated, explicit recruitment evidence. Advertised opportunities appear before standing invitations; this is evidence strength, not an acceptance probability.' : recent ? 'Researchers producing high-impact work recently and publishing in this subfield within the last 12 months.' : 'Established researchers, ranked by career h-index within the existing most-cited candidate set.'}</p>
     {recent && <p className="note">{net.meta.start} – {net.meta.end} · snapshot {net.meta.asOf}. Ranked by top-10% cited papers, adjusted for publication year, type and subfield.</p>}
-    <p className="srcline">{net.people.length} researchers · {unmapped ? `${unmapped} without a mapped location · ` : ''}Select a person to isolate their collaborations.</p>
+    <p className="srcline">{net.people.length} researcher{net.people.length===1?'':'s'} · {unmapped ? `${unmapped} without a mapped location · ` : ''}Select a person to isolate their collaborations.</p>
+    {open&&!A.netSel&&<p className="lede">Select a researcher to inspect roles, funding statements, dates and application instructions.</p>}
     {selected && <section>
       <h2>{selected.name}</h2><p className="lede">{selected.iname}{selected.locationApproximate ? ' · location approximate to country' : selected.x==null ? ' · location unavailable' : ''}</p>
-      <p>{recent ? `${fmt(selected.score)} recent top-10% papers · ${fmt(selected.recentPapers)} subfield papers in the last 12 months` : `Career h-index ${fmt(selected.h)} · ${fmtShort(selected.cites)} career citations`}</p>
+      <p>{recent ? `${fmt(selected.score)} recent top-10% papers · ${fmt(selected.recentPapers)} subfield papers in the last 12 months` : career ? `Career h-index ${fmt(selected.h)} · ${fmtShort(selected.cites)} career citations` : `${selected.opportunities.length} current evidence records`}</p>
       <div className="research-actions"><button onClick={() => selectNet(null)}>Show all researchers</button><a href={'https://openalex.org/'+selected.id} target="_blank" rel="noreferrer">OpenAlex profile ↗</a></div>
     </section>}
-    <h2>{recent ? 'Recent impact' : 'Career h-index'}</h2>
-    <ol className="rows">{top.map(p=><Row key={p.id} name={p.name} small={' '+p.iname+(recent ? ` · ${p.recentPapers} papers in last 12 months` : '')} value={p.score} frac={p.score/Math.max(1,top[0].score)} onPick={()=>selectNet(p)} />)}</ol>
+    {selected&&open&&<OpenEvidence person={selected}/>}
+    <h2>{recent ? 'Recent impact' : career ? 'Career h-index' : 'Evidence-backed researchers'}</h2>
+    <ol className="rows">{top.map(p=><Row key={p.id} name={p.name} small={' '+p.iname+(recent ? ` · ${p.recentPapers} papers in last 12 months` : '')+(open ? ' · '+[...new Set(p.opportunities.flatMap(o=>o.types))].join(', ') : '')} txt={!recent&&!career ? (p.score===2?'Advertised':'Invitation') : undefined} value={p.score} frac={p.score/Math.max(1,top[0].score)} onPick={()=>selectNet(p)} />)}</ol>
     <h2>{selected ? 'Selected collaborations' : 'Collaborations in the sample'}</h2>
     {pairs.length ? <ol className="rows">{pairs.map(l=><Row key={l.a.id+l.b.id} name={l.a.name+' × '+l.b.name} txt={fmt(l.n)+' sampled papers'} onPick={()=>selectNet(selected===l.a ? l.b : l.a)} />)}</ol> : <p className="lede">No collaborations recorded in this sample. This does not mean there are none.</p>}
     <details className="research-method"><summary>How this view is built</summary>
-      <p>{recent ? net.meta.method : 'The existing snapshot selects up to 60 researchers by career citation count for a subfield, then displays them by career h-index. These career metrics cover all of a person’s work, not only this subfield. Links come from up to 200 highly cited subfield papers from 2017–2026.'}</p>
-      <p>Affiliations are the latest available in OpenAlex. Missing institution coordinates fall back to country-level placement and are marked in tooltips. Citation lag and author-profile errors can affect these indicators; this is a discovery aid, not a definitive assessment.</p>
+      <p>{!recent&&!career ? net.meta.method : recent ? net.meta.method : 'The existing snapshot selects up to 60 researchers by career citation count for a subfield, then displays them by career h-index. These career metrics cover all of a person’s work, not only this subfield. Links come from up to 200 highly cited subfield papers from 2017–2026.'}</p>
+      {open&&<p>Only explicit official recruitment evidence qualifies. Institutional award totals, project counts and coauthorship do not imply openings. Evidence is reviewed for named researcher identity, opportunity type, dates and restrictions; undated invitations are labeled as invitations and require review within 90 days. No listing is treated as a guaranteed vacancy.</p>}
+      {combined&&<p>Intersections match stable OpenAlex author IDs across the existing candidate samples. Researchers outside those samples may also qualify in reality. Duplicate collaboration edges use the larger sampled count, never an unverified sum.</p>}
+      <p>Affiliations use OpenAlex, with source-verified corrections for recruitment listings. Missing institution coordinates fall back to country-level placement and are marked in tooltips. Citation lag and author-profile errors can affect these indicators; this is a discovery aid, not a definitive assessment.</p>
       <a href="https://help.openalex.org/data/works/attributes/" target="_blank" rel="noreferrer">OpenAlex metric definitions ↗</a>
     </details>{back}
   </>;

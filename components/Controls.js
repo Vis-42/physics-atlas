@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { toggleFilter } from '../lib/research-filters.mjs';
 import { A, subscribe, getVersion, go, goPerson, level, searchItems, loadPeopleIndex, setPhase, setResearchMode, selectNet, setColorMode } from '../lib/atlas';
 import { FAMILIES, YEARS, YEARS_LONG, famOf } from '../lib/theme';
 
@@ -81,7 +82,7 @@ export function Key() {
   const lv = level(), key = A.skin.key;
   const title = { a: 'Key', b: 'Survey key', c: 'A physics atlas of the world' }[key];
   const plate = PLATE[lv];
-  if (A.researchMode !== 'institutions') return <div id="key"><div className="kt">Researcher map</div><div className="body"><p>Dot size: {A.researchMode === 'frontier' ? 'recent top-10% papers' : 'career h-index'}</p><p>Lines: coauthorship in the sampled papers</p><p>Double bars: connection continues at the opposite edge</p><p>Orange ring: selected researcher</p></div></div>;
+  if (A.researchMode !== 'institutions') return <div id="key"><div className="kt">Researcher map</div><div className="body"><p>Dot size: {A.researchMode.includes('frontier') ? 'recent top-10% papers' : A.researchMode.includes('career') ? 'career h-index' : 'evidence category (not vacancy count)'}</p><p>Lines: coauthorship in the sampled papers</p><p>Double bars: connection continues at the opposite edge</p><p>Orange ring: selected researcher</p></div></div>;
   return (
     <div id="key" className={min ? 'min' : ''}>
       <div className="kt">
@@ -209,8 +210,9 @@ export function ResearchSwitch() {
   useAtlas();
   if (A.phase?.kind !== 'subfield') return null;
   return <div id="research-mode" role="group" aria-label="Subfield map layers">
-    {[['institutions','Institutions'],['career','Career leaders'],['frontier','Frontier now']].map(([mode,label]) =>
-      <button key={mode} aria-pressed={A.researchMode === mode} onClick={() => setResearchMode(mode)}>{label}</button>)}
+    <span className="filter-hint">Match all selected</span>
+    {[['institutions','Institutions'],['career','Career leaders'],['frontier','Frontier now'],['open','Open to researchers']].map(([mode,label]) =>
+      <button key={mode} aria-pressed={A.researchMode.split('+').includes(mode)} onClick={() => setResearchMode(mode === 'institutions' ? mode : toggleFilter(A.researchMode,mode))}>{label}</button>)}
   </div>;
 }
 

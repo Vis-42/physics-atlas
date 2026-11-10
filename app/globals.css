@@ -344,3 +344,7 @@ html[data-skin='c'] #view .vb, html[data-skin='c'] #view .vx, html[data-skin='c'
 .strength-list button { width:100%; display:flex; gap:10px; justify-content:space-between; text-align:left; background:none; border:0; border-bottom:1px solid var(--rule); padding:9px 0; cursor:pointer; }
 .strength-list small { display:block; color:var(--ink2); font-size:11px; margin-top:4px; }
 .strength-list strong { font:400 12px var(--mono); white-space:nowrap; }
+#research-mode { flex-wrap:wrap; max-width:calc(100% - 28px); }
+.open-evidence { border-top:1px solid var(--rule); margin-top:16px; padding-top:12px; }
+@media(max-width:720px) { #research-mode { max-width:calc(100% - 24px); } #research-mode button { padding:6px; font-size:10px; } }
+#research-mode .filter-hint { flex-basis:100%; color:var(--ink2); font:400 10px var(--sans); padding:0 4px 3px; }

@@ -1,0 +1,485 @@
+{
+  "asOf": "2026-11-10",
+  "method": "Manually reviewed official university, lab and researcher recruitment pages. Named-person identity and opportunity subject determine subfield placement. Institutional funding is context only and never confers open status. Advertised opportunities and standing invitations are distinguished; neither guarantees acceptance or remaining capacity. Review dates are at most 90 days after checking. Dates are evaluated again in the browser. This is a small, non-exhaustive reviewed sample, with uneven field and geographic coverage.",
+  "people": [
+    {
+      "id": "A5050695684",
+      "name": "Onur Mutlu",
+      "h": 122,
+      "cites": 48442,
+      "iid": "I35440088",
+      "iname": "ETH Zurich",
+      "cc": "CH",
+      "identitySource": "https://people.inf.ethz.ch/omutlu/",
+      "opportunities": [
+        {
+          "id": "A5050695684-1",
+          "subfields": [
+            "1708"
+          ],
+          "title": "SAFARI research applications",
+          "types": [
+            "phd",
+            "postdoc",
+            "visiting"
+          ],
+          "source": "https://people.inf.ethz.ch/omutlu/",
+          "summary": "Onur Mutlu invites research applications through the SAFARI application route.",
+          "funding": "Not specified; confirm for the intended role.",
+          "evidence": "invitation",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": null,
+          "requirements": "Study the group material and use its application process before contacting the supervisor."
+        }
+      ]
+    },
+    {
+      "id": "A5001094226",
+      "name": "Pranav Rajpurkar",
+      "h": 52,
+      "cites": 43563,
+      "iid": "I136199984",
+      "iname": "Harvard University",
+      "cc": "US",
+      "identitySource": "https://www.rajpurkarlab.hms.harvard.edu/join",
+      "opportunities": [
+        {
+          "id": "A5001094226-1",
+          "subfields": [
+            "2718"
+          ],
+          "title": "Medical AI research roles",
+          "types": [
+            "postdoc",
+            "staff"
+          ],
+          "source": "https://www.rajpurkarlab.hms.harvard.edu/join",
+          "summary": "The lab advertises postdoc roles and a predoctoral research route in medical AI.",
+          "funding": "Not specified on this page; confirm compensation and support.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": null,
+          "requirements": "Apply through the structured form, not email. Predoc applicants must be based in the US; postdoc requirements vary by project."
+        },
+        {
+          "id": "A5001094226-2",
+          "subfields": [
+            "2718"
+          ],
+          "title": "Harvard AIM doctoral route",
+          "types": [
+            "phd"
+          ],
+          "source": "https://www.rajpurkarlab.hms.harvard.edu/join",
+          "summary": "Prospective PhD students apply through Harvard AIM; admitted Harvard or MIT students may discuss rotations.",
+          "funding": "Not specified here; check the graduate program.",
+          "evidence": "invitation",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": null,
+          "requirements": "Program admissions determine selection. The lab asks applicants not to email about PhD admissions."
+        },
+        {
+          "id": "A5001094226-3",
+          "subfields": [
+            "2718"
+          ],
+          "title": "Medical AI partnership proposals",
+          "types": [
+            "collaboration"
+          ],
+          "source": "https://rajpurkarlab.hms.harvard.edu/contact",
+          "summary": "The lab accepts proposed sponsored research and collaborative grant discussions through its partnership form.",
+          "funding": "Proposal-dependent; no committed funding implied.",
+          "evidence": "invitation",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": null,
+          "requirements": "Preliminary intake only; agreements require Harvard authorization."
+        }
+      ]
+    },
+    {
+      "id": "A5016606943",
+      "name": "Andreas Geiger",
+      "h": 95,
+      "cites": 71624,
+      "iid": "I4405263145",
+      "iname": "ELLIS Institute Tübingen · KE:SAI route",
+      "cc": "DE",
+      "identitySource": "https://ellis.eu/person/andreas-geiger",
+      "opportunities": [
+        {
+          "id": "A5016606943-1",
+          "subfields": [
+            "1704"
+          ],
+          "title": "Physical AI doctoral recruitment",
+          "types": [
+            "phd"
+          ],
+          "source": "https://kesai.eu/join/",
+          "summary": "KE:SAI lists doctoral recruitment through the ELLIS industry track and names this researcher as an advisor choice.",
+          "funding": "Not specified on the recruitment page.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": null,
+          "requirements": "Apply through the next ELLIS PhD cycle; check its deadlines and eligibility. This is the KE:SAI/ELLIS route only; the university Autonomous Vision Group states it is not hiring during Geiger’s leave.",
+          "contextSource": "https://uni-tuebingen.de/en/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/autonomous-vision/team/"
+        }
+      ]
+    },
+    {
+      "id": "A5044005697",
+      "name": "Bernhard Schölkopf",
+      "h": 151,
+      "cites": 164103,
+      "iid": "I4405263145",
+      "iname": "ELLIS Institute Tübingen · KE:SAI route",
+      "cc": "DE",
+      "identitySource": "https://institute-tue.ellis.eu/en/people/bs",
+      "opportunities": [
+        {
+          "id": "A5044005697-1",
+          "subfields": [
+            "1702"
+          ],
+          "title": "Physical AI doctoral recruitment",
+          "types": [
+            "phd"
+          ],
+          "source": "https://kesai.eu/join/",
+          "summary": "KE:SAI lists doctoral recruitment through the ELLIS industry track and names this researcher as an advisor choice.",
+          "funding": "Not specified on the recruitment page.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": null,
+          "requirements": "Apply through the next ELLIS PhD cycle; check its deadlines and eligibility."
+        }
+      ]
+    },
+    {
+      "id": "A5026322200",
+      "name": "Sergey Levine",
+      "h": 141,
+      "cites": 97632,
+      "iid": "I95457486",
+      "iname": "University of California, Berkeley",
+      "cc": "US",
+      "identitySource": "https://people.eecs.berkeley.edu/~svlevine/",
+      "opportunities": [
+        {
+          "id": "A5026322200-1",
+          "subfields": [
+            "1703",
+            "2207"
+          ],
+          "title": "RAIL doctoral application route",
+          "types": [
+            "phd"
+          ],
+          "source": "https://people.eecs.berkeley.edu/~svlevine/",
+          "summary": "Levine’s page invites Berkeley EECS PhD applications and describes an annual intake.",
+          "funding": "Not specified here; verify through the program.",
+          "evidence": "invitation",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": null,
+          "requirements": "Do not email the professor about undergraduate, MS or PhD admissions; use the formal program application."
+        }
+      ]
+    },
+    {
+      "id": "A5060593392",
+      "name": "Raman Bahal",
+      "h": 34,
+      "cites": 5236,
+      "iid": "I140172145",
+      "iname": "University of Connecticut",
+      "cc": "US",
+      "identitySource": "https://bahal.lab.uconn.edu/positionsopen/",
+      "opportunities": [
+        {
+          "id": "A5060593392-1",
+          "subfields": [
+            "1312",
+            "2502"
+          ],
+          "title": "Bahal lab Spring 2027 recruitment",
+          "types": [
+            "phd",
+            "postdoc"
+          ],
+          "source": "https://bahal.lab.uconn.edu/positionsopen/",
+          "summary": "The lab advertises PhD and postdoctoral recruitment for Spring 2027.",
+          "funding": "Not specified on the notice.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-01-01",
+          "deadline": null,
+          "requirements": "The notice requests a CV or résumé sent to Dr Bahal. Verify timing and eligibility directly."
+        }
+      ]
+    },
+    {
+      "id": "A5067221382",
+      "name": "Janne Ruostekoski",
+      "h": 47,
+      "cites": 5997,
+      "iid": "I67415387",
+      "iname": "Lancaster University",
+      "cc": "GB",
+      "identitySource": "https://www.lancaster.ac.uk/physics/study/current-phds/",
+      "opportunities": [
+        {
+          "id": "A5067221382-1",
+          "subfields": [
+            "3107"
+          ],
+          "title": "PhD in collective atom–light physics",
+          "types": [
+            "phd"
+          ],
+          "source": "https://www.lancaster.ac.uk/physics/study/current-phds/",
+          "summary": "Doctoral project on collective optical responses in atomic systems.",
+          "funding": "Competitive funding; an advertised project does not guarantee a funded place.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": "2027-01-31",
+          "requirements": "Contact the named supervisor and follow the university application route."
+        }
+      ]
+    },
+    {
+      "id": "A5038286795",
+      "name": "Federico Fedele",
+      "h": 13,
+      "cites": 661,
+      "iid": "I67415387",
+      "iname": "Lancaster University",
+      "cc": "GB",
+      "identitySource": "https://www.lancaster.ac.uk/physics/study/current-phds/",
+      "opportunities": [
+        {
+          "id": "A5038286795-1",
+          "subfields": [
+            "3104",
+            "3107"
+          ],
+          "title": "PhD in quantum-device information thermodynamics",
+          "types": [
+            "phd"
+          ],
+          "source": "https://www.lancaster.ac.uk/physics/study/current-phds/",
+          "summary": "Doctoral project on information processing in semiconductor quantum devices.",
+          "funding": "Competitive funding; an advertised project does not guarantee a funded place.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": "2027-01-31",
+          "requirements": "Contact the named supervisor and follow the university application route."
+        }
+      ]
+    },
+    {
+      "id": "A5022001835",
+      "name": "Aneta Stefanovska",
+      "h": 53,
+      "cites": 9953,
+      "iid": "I67415387",
+      "iname": "Lancaster University",
+      "cc": "GB",
+      "identitySource": "https://www.lancaster.ac.uk/physics/study/current-phds/",
+      "opportunities": [
+        {
+          "id": "A5022001835-1",
+          "subfields": [
+            "3109"
+          ],
+          "title": "PhD projects in nonlinear biophysics",
+          "types": [
+            "phd"
+          ],
+          "source": "https://www.lancaster.ac.uk/physics/study/current-phds/",
+          "summary": "Doctoral projects applying nonlinear dynamics to biological and physical systems.",
+          "funding": "Competitive funding; an advertised project does not guarantee a funded place.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": "2027-01-31",
+          "requirements": "Contact the named supervisor and follow the university application route."
+        }
+      ]
+    },
+    {
+      "id": "A5055113608",
+      "name": "Samuel Jarvis",
+      "h": 19,
+      "cites": 1020,
+      "iid": "I67415387",
+      "iname": "Lancaster University",
+      "cc": "GB",
+      "identitySource": "https://www.lancaster.ac.uk/physics/study/current-phds/",
+      "opportunities": [
+        {
+          "id": "A5055113608-1",
+          "subfields": [
+            "3104",
+            "3107",
+            "2208"
+          ],
+          "title": "PhD projects in nanoscale electronics",
+          "types": [
+            "phd"
+          ],
+          "source": "https://www.lancaster.ac.uk/physics/study/current-phds/",
+          "summary": "Doctoral projects in graphene transistors and molecular electronics; the latter connects to the QMol research program.",
+          "funding": "Competitive funding; an advertised project does not guarantee a funded place.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": "2027-01-31",
+          "requirements": "Contact the named supervisor and follow the university application route."
+        }
+      ]
+    },
+    {
+      "id": "A5019980862",
+      "name": "Lucy Oswald",
+      "h": 19,
+      "cites": 1046,
+      "iid": "I241749",
+      "iname": "University of Cambridge",
+      "cc": "GB",
+      "identitySource": "https://www.phy.cam.ac.uk/study/postgraduate/programmes/phd-in-physics/graduate-entry-for-cavendish-astrophysics/",
+      "opportunities": [
+        {
+          "id": "A5019980862-1",
+          "subfields": [
+            "3103"
+          ],
+          "title": "Pulsar research doctoral opportunities",
+          "types": [
+            "phd"
+          ],
+          "source": "https://www.phy.cam.ac.uk/study/postgraduate/programmes/phd-in-physics/graduate-entry-for-cavendish-astrophysics/",
+          "summary": "Two advertised routes for October 2027: a PhD studentship and a research-assistant role incorporating doctoral study in PulsarMAP.",
+          "funding": "Advertised as fully funded; eligibility differs between the two routes.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": "2026-12-08",
+          "requirements": "Studentship: Home applicants. ERC project employment route: Home and International applicants. Check the official instructions."
+        }
+      ]
+    },
+    {
+      "id": "A5088795815",
+      "name": "Safeer Chenattukuzhiyil",
+      "h": 14,
+      "cites": 1187,
+      "iid": "I40120149",
+      "iname": "University of Oxford",
+      "cc": "GB",
+      "identitySource": "https://www.physics.ox.ac.uk/research/group/magnetism-intelligent-devices-mind/join-group",
+      "opportunities": [
+        {
+          "id": "A5088795815-1",
+          "subfields": [
+            "3104"
+          ],
+          "title": "MIND spin-device doctoral opportunities",
+          "types": [
+            "phd"
+          ],
+          "source": "https://www.physics.ox.ac.uk/research/group/magnetism-intelligent-devices-mind/join-group",
+          "summary": "Two Royal Society-supported doctoral places advertised for October 2027 in spin-based devices.",
+          "funding": "The notice states tuition and stipend support.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-01-01",
+          "deadline": null,
+          "requirements": "Apply through Oxford Condensed Matter Physics. The page gives January 2027 without an exact day; check the portal."
+        }
+      ]
+    },
+    {
+      "id": "A5072251298",
+      "name": "Shweta Shinde",
+      "h": 18,
+      "cites": 2076,
+      "iid": "I35440088",
+      "iname": "ETH Zurich",
+      "cc": "CH",
+      "identitySource": "https://sectrs.ethz.ch/join-us.html",
+      "opportunities": [
+        {
+          "id": "A5072251298-1",
+          "subfields": [
+            "1708",
+            "1705",
+            "1710"
+          ],
+          "title": "Secure systems lab recruitment",
+          "types": [
+            "phd",
+            "postdoc",
+            "visiting"
+          ],
+          "source": "https://sectrs.ethz.ch/join-us.html",
+          "summary": "The group advertises doctoral and postdoctoral roles, student projects and academic visits.",
+          "funding": "Not specified on the page.",
+          "evidence": "advertised",
+          "status": "open",
+          "checkedAt": "2026-11-10",
+          "reviewBy": "2027-02-08",
+          "deadline": null,
+          "requirements": "Send the requested CV and research statement to the named supervisor. ETH generally requires a master’s degree for doctoral entry."
+        }
+      ]
+    }
+  ],
+  "excludedReviews": [
+    {
+      "name": "Steven J. Cooke",
+      "source": "https://www.fecpl.ca/opportunities/",
+      "checkedAt": "2026-11-10",
+      "reason": "Listings shown were several years old; current recruitment not established."
+    },
+    {
+      "name": "Anne Brunet",
+      "source": "https://web.stanford.edu/group/brunet/location.html",
+      "checkedAt": "2026-11-10",
+      "reason": "Contact information alone does not establish recruiting intent."
+    }
+  ],
+  "institutions": [
+    {
+      "id": "I4405263145",
+      "name": "ELLIS Institute Tübingen",
+      "cc": "DE",
+      "lng": 9.05222,
+      "lat": 48.52266,
+      "source": "https://openalex.org/I4405263145"
+    }
+  ]
+}

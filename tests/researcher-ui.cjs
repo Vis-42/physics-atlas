@@ -8,7 +8,7 @@ for(const [name,width,height] of [['desktop',1440,900],['mobile',390,844]]){
  await page.getByRole('button',{name:'Career leaders',exact:true}).click();await page.getByRole('heading',{name:'Career h-index',exact:true}).waitFor();await page.waitForTimeout(500);
  assert.equal(await page.getByRole('heading',{name:'Leading countries',exact:true}).count(),0);assert(!await page.evaluate(()=>window.mapText.includes('United States')));
  await page.screenshot({path:`/tmp/research-${name}-career.png`});
- await page.getByRole('button',{name:'Frontier now',exact:true}).click();await page.getByRole('heading',{name:'Recent impact',exact:true}).waitFor();await page.waitForTimeout(500);assert(page.url().includes('~frontier'));await page.screenshot({path:`/tmp/research-${name}-frontier.png`});
+ await page.getByRole('button',{name:'Frontier now',exact:true}).click();await page.getByRole('button',{name:'Career leaders',exact:true}).click();await page.getByRole('heading',{name:'Recent impact',exact:true}).waitFor();await page.waitForTimeout(500);assert(page.url().includes('~frontier'));await page.screenshot({path:`/tmp/research-${name}-frontier.png`});
  await page.locator('#panel .rows .rowb').first().click();await page.getByRole('button',{name:'Show all researchers'}).waitFor();await page.getByRole('button',{name:'Show all researchers'}).click();
  await page.reload({waitUntil:'networkidle'});await page.getByRole('heading',{name:'Recent impact',exact:true}).waitFor();
  await page.getByRole('button',{name:'Institutions',exact:true}).click();await page.getByRole('heading',{name:'Leading countries',exact:true}).waitFor();
