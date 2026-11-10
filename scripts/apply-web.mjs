@@ -15,14 +15,25 @@ const DRY = process.argv.includes('--dry');
 const L = JSON.parse(fs.readFileSync('public/data/atlas.json'));
 const fold = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\b(the|of|and|at|de|la|le|der|du)\b/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
 const unis = L.universities.map((u) => ({ u, n: fold(u.name), s: fold(u.short) }));
-function findInst(name) {
-  const f = fold(name);
+function findOne(f) {
   if (!f) return null;
   let hit = unis.find((x) => x.n === f || x.s === f);
   if (hit) return hit.u;
-  // "Stanford University School of Medicine" → Stanford University; longest map name contained in it
+  // "stanford university school of medicine" → Stanford University: the longest map name contained in it
   hit = unis.filter((x) => x.n.length > 6 && (f.includes(x.n) || x.n.includes(f))).sort((a, b) => b.n.length - a.n.length)[0];
+  if (hit) return hit.u;
+  // "harvard t h chan school ..." / "nyu langone health" → the institution whose short name leads it
+  hit = unis.filter((x) => x.s.length >= 3 && (f === x.s || f.startsWith(x.s + ' '))).sort((a, b) => b.s.length - a.s.length)[0];
   return hit ? hit.u : null;
+}
+// common names the map spells differently (NYU, DESY, a medical school under its university)
+const ALIAS = { nyu: 'new-york', desy: 'deutsches', lumc: 'leiden', 'leiden university medical center': 'leiden' };
+const bySlugU = new Map(L.universities.map((u) => [u.slug, u]));
+function alias(part) { const f = fold(part); for (const [k, v] of Object.entries(ALIAS)) if (f === k || f.startsWith(k + ' ') || f.includes(' ' + k + ' ') || f.endsWith(' ' + k)) return bySlugU.get(v); return null; }
+// Several institutions may be named ("A*STAR / NUS", "X (also Y)"): the first one on the map wins.
+function findInst(name) {
+  for (const part of String(name || '').split(/[\/;()]| also | and /i)) { const u = findOne(fold(part)) || alias(part); if (u) return u; }
+  return findOne(fold(name));
 }
 
 // web verdicts
@@ -62,7 +73,13 @@ function bestArea(slug, id) {
   const tot = a.sf.reduce((s, [, n]) => s + n, 0) || 1;
   let best = null, bs = 0;
   for (const [s, n] of a.sf) { const id2 = sub(s); if (valid.has(id2) && n / tot > bs) { bs = n / tot; best = id2; } }
-  return bs >= 0.1 ? best : null;
+  if (bs >= 0.1) return best;
+  // nothing in their subfields: a department in the same broad field (the first two digits of the subfield)
+  const fieldOf = (x) => x.slice(1, 3);
+  const top = a.sf.length ? sub(a.sf[0][0]) : null;
+  if (!top) return null;
+  const same = [...valid].filter((x) => fieldOf(x) === fieldOf(top));
+  return same.length ? same[0] : null;
 }
 let backup = null;
 function fromBackup(slug, id) {
@@ -79,8 +96,18 @@ const tally = (k) => (stats[k] = (stats[k] || 0) + 1);
 const remove = (id, why) => { const s = where.get(id); if (!s) return; const d = files.get(s); d.people = d.people.filter((p) => p.id !== id); where.delete(id); tally('removed:' + why); log.push(`remove ${id} @${s} (${why})`); };
 const move = (id, to, why) => {
   const s = where.get(id); if (!s || s === to) return;
-  const area = bestArea(to, id);
-  if (!area) return remove(id, why + ', no fitting department at ' + to);
+  let area = bestArea(to, id);
+  if (!area) {
+    // a confirmed move to a map institution that has no department for their work: add it there
+    const a = prof.get(id), top = a && a.sf.length ? sub(a.sf[0][0]) : null;
+    const sf = top && L.subfields.find((x) => 'a' + x.id === top);
+    if (!sf) return remove(id, why + ', no fitting department at ' + to);
+    const u = L.universities.find((x) => x.slug === to), cnt = (u.subs || []).find(([s]) => 'a' + s === top);
+    const fieldName = (L.fields.find((f) => f.id === sf.field) || {}).name || '';
+    if (!files.get(to).areas.some((x) => x.id === top))
+      files.get(to).areas.push({ id: top, name: sf.name, works: cnt ? cnt[1] : 300, field: fieldName, researchersSeen: 1, xi: [], added: true });
+    area = top; tally('department-added');
+  }
   const d = files.get(s), p = d.people.find((q) => q.id === id);
   d.people = d.people.filter((q) => q.id !== id);
   files.get(to).people.push({ ...p, area, areas: [area, ...(p.areas || []).filter((a) => a !== area)], sug: [], degree: 0, movedFrom: true, web: true });
