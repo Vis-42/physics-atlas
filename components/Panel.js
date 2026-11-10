@@ -6,6 +6,7 @@ import { loadHeat, makePhase, isMeasured } from '../lib/phase';
 import { FAM_NAME, YEARS, YEARS_LONG } from '../lib/theme';
 import { fmt, fmtShort } from '../lib/util';
 import { useAtlas } from './Controls';
+import { InstitutionEvidence, CountryStrengths } from './EvidencePanels';
 
 const hue = (fam) => A.skin.hue[fam] || A.skin.neutral;
 const checked = () => {
@@ -189,6 +190,7 @@ function Lite({ inst }) {
         <div><N v={inst.p ?? inst.works} k="uniPapers" /><span className="l">papers {inst.p != null ? 'in ' + A.phase.short : YEARS + ', all fields'}</span></div>
       </div>
       <p className="lede">Part of the heat map for {A.phase.short}. Its inside (areas and researchers) isn’t mapped yet.</p>
+      <p className="srcline">Funding and initiative snapshots currently cover the {A.W.unis.length} fully mapped institutions. No snapshot is available for this supplementary institution yet.</p>
     </div>
   );
 }
@@ -208,6 +210,7 @@ function Country({ c }) {
         <div><N v={c.members.length} k={A.W.meta.qScored ? "quality" : "cHeld"} /><span className="l">institutions held</span></div>
       </div>
       <p className="lede">Its institutions at their real places on the map, sized and ranked by significance in {phName()}.</p>
+      <CountryStrengths country={c} />
       <HeatLists cc={c.id} />
       <h2>Leading institutions</h2>
       <ol className="rows">{members.slice(0, 8).map((u) => <Row key={u.id} kind="uni" item={u} name={<>{u.name}<Exc u={u} /></>} small={' ' + fmtShort(u.pw) + ' papers'} txt={sigTxt(u.sig, u.sigM)} k="sig" frac={u.sig / mmax} />)}</ol>
@@ -298,6 +301,7 @@ function Uni({ u, campus }) {
         <div><N v={u.h} k="uniH" /><span className="l">h-index · {fmtShort(u.citations)} citations</span></div>
       </div>
       {u.q != null ? <p className="lede">Quality score <N k="quality" txt={fmt(Math.round(u.q))} />, #{fmt(u.qRank)} of the {fmt(A.W.meta.qScored)} leading institutions scored: {fmt(Math.round(u.eliteS + u.eliteB / 10))} elite papers from {fmtShort(u.works)} papers.</p> : u.excRank && <p className="lede">{u.pw ? <>{Math.round((1000 * u.sig) / Math.max(1, u.pw)) / 10}% of its papers are highly cited. </> : null}Impact for its size ranks <N k="exc" txt={'#' + fmt(u.excRank)} /> of {fmt(A.W.meta.excTotal)} research institutions.</p>}
+      <InstitutionEvidence institution={u} />
       <h2>Field mix</h2>
       <Mix u={u} />
       {inner}

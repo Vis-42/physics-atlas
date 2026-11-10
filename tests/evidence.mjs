@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {fundingSeries,periodChange,projectStatus,rankStrengths,safeSource} from '../lib/evidence.mjs';
+const award={id:'G1',year:2024,amount:100,currency:'USD',recipients:[{id:'I1'},{id:'I2'},{id:'I2'}],parents:[]};
+const projects=[award,award,{...award,id:'G2',currency:'EUR'},{...award,id:'G3',parents:['G1']},{...award,id:'G4',amount:null},{...award,id:'G5',year:null},{...award,id:'G6',recipients:[{id:'I3'}]}];
+const f=fundingSeries(projects,'I1',2023,2026);
+assert.equal(f.series.length,2);assert.equal(f.series[0].years[1].value,50);assert.equal(f.series[0].years[0].value,null);assert.equal(f.excludedComponents,1);assert.equal(f.missingAmounts,2);assert.equal(f.sharedAwards,2);
+assert.equal(periodChange([{year:2024,value:50},{year:2025,value:75},{year:2026,value:999}],2026),.5);
+assert.equal(periodChange([{year:2024,value:null},{year:2025,value:75}],2026),null);
+assert.equal(projectStatus({start:'2025-01-01',end:'2027-01-01'},'2026-11-10'),'active');assert.equal(projectStatus({start:'2027-01-01'},'2026-11-10'),'upcoming');assert.equal(projectStatus({end:'2025-01-01'},'2026-11-10'),'ended');assert.equal(projectStatus({start:'2025-01-01'},'2026-11-10'),'unknown');
+const rows=[{id:1,papers:90,highImpact:90},{id:2,papers:1000,highImpact:100},{id:3,papers:200,highImpact:80}];
+assert.equal(rankStrengths(rows,'rate')[0].id,3);assert.equal(rankStrengths(rows)[0].id,2);
+assert.equal(safeSource('javascript:alert(1)','fallback'),'fallback');assert.equal(safeSource('https://example.com','fallback'),'https://example.com/');
+console.log('Funding attribution, missingness, currencies, complete-year comparisons, initiative status and country rankings: PASS');

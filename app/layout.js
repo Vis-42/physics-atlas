@@ -22,7 +22,8 @@ export const viewport = { width: 'device-width', initialScale: 1, viewportFit: '
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-skin="a">
+    <html lang="en" data-skin="a" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{__html: "try{var m=localStorage.getItem('atlas-color-mode')||'system';document.documentElement.dataset.colorMode=(m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))?'dark':'light'}catch(e){}"}} /></head>
       <body>{children}</body>
     </html>
   );

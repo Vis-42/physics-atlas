@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { start, setSkin } from '../lib/atlas';
-import { Crumbs, Search, Key, Skins, ViewSwitch, ResearchSwitch } from '../components/Controls';
+import { Crumbs, Search, Key, Skins, ViewSwitch, ResearchSwitch, ColorMode } from '../components/Controls';
 import { Panel } from '../components/Panel';
 
 export default function Page() {
@@ -26,6 +26,7 @@ export default function Page() {
         {ready && <ResearchSwitch />}
         {ready && <Key />}
         <Skins onChange={setSkin} />
+        {ready && <ColorMode />}
       </div>
       <Panel status={status} />
       <div id="tip" ref={tip} role="tooltip" />

@@ -8,9 +8,11 @@
     "build": "next build",
     "verify": "node scripts/fetch-authors.mjs && node scripts/verify-people.mjs",
     "data:frontier": "node scripts/fetch-frontier.mjs",
-    "test": "node tests/edge-connections.mjs && node tests/researcher-data.mjs",
-    "test:browser": "node tests/researcher-ui.cjs && node tests/researcher-races.cjs",
-    "test:data": "node tests/frontier-snapshots.mjs"
+    "test": "node tests/edge-connections.mjs && node tests/researcher-data.mjs && node tests/evidence.mjs",
+    "test:browser": "node tests/researcher-ui.cjs && node tests/researcher-races.cjs && node tests/evidence-ui.cjs",
+    "test:data": "node tests/frontier-snapshots.mjs",
+    "data:evidence": "node scripts/fetch-institution-evidence.mjs",
+    "test:evidence": "node tests/evidence-snapshots.mjs"
   },
   "dependencies": {
     "@fontsource/eb-garamond": "^5.1.0",

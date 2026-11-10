@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { A, subscribe, getVersion, go, goPerson, level, searchItems, loadPeopleIndex, setPhase, setResearchMode, selectNet } from '../lib/atlas';
+import { A, subscribe, getVersion, go, goPerson, level, searchItems, loadPeopleIndex, setPhase, setResearchMode, selectNet, setColorMode } from '../lib/atlas';
 import { FAMILIES, YEARS, YEARS_LONG, famOf } from '../lib/theme';
 
 export const useAtlas = () => useSyncExternalStore(subscribe, getVersion, () => 0);
@@ -212,4 +212,11 @@ export function ResearchSwitch() {
     {[['institutions','Institutions'],['career','Career leaders'],['frontier','Frontier now']].map(([mode,label]) =>
       <button key={mode} aria-pressed={A.researchMode === mode} onClick={() => setResearchMode(mode)}>{label}</button>)}
   </div>;
+}
+
+export function ColorMode() {
+  useAtlas();
+  return <label id="color-mode"><span>Theme</span><select aria-label="Color mode" value={A.colorMode} onChange={e=>setColorMode(e.target.value)}>
+    <option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option>
+  </select></label>;
 }

@@ -95,3 +95,17 @@ Browser regression checks: serve a completed static build, then run `npm run tes
 resolvable as `playwright`, or supplied via `PLAYWRIGHT_MODULE`; `CHROME_BIN` optionally selects
 a local Chrome executable. These checks cover opt-in loading, clean layers, researcher search,
 selection, shared links, retries, missing snapshots, zoom and stale-request isolation.
+
+## Institutional evidence, country strengths and appearance
+
+`npm run data:evidence` refreshes static, per-entity snapshots from OpenAlex. The script reads `OPENALEX_API_KEY` or the ignored `.cache/openalex-key`, caches compressed responses, retries temporary failures, and writes atomically. Set `AS_OF=YYYY-MM-DD` to resume a specific snapshot date. Optional arguments `countries` and `institutions` select a collection. Existing same-date entity snapshots are reused. The prior atlas/people pipeline is independent.
+
+`public/data/institutions/I*.json` contains documented funded initiatives, named recipients, original source links, status dates, and research activity. It covers awards beginning in the last five complete years/current year plus older awards with a current or future end year. It cannot establish a complete inventory of centers, partnerships or programs, and makes no public/private ownership assumptions. The same evidence policy applies to all mapped institutions.
+
+Funding charts estimate new commitments by award start year, not annual revenue, spending or total institutional budgets. Positive reported amounts are split equally among distinct named recipients; awards with a parent are excluded to reduce component duplication. Currencies stay separate, without inflation adjustment. Missing amounts remain missing. The current year is labeled YTD; growth compares the last two complete years. Separate grant-linked publication counts show acknowledged research activity, not money or proof that every affiliated institution received an award. Incomplete indexing and attribution limit comparisons.
+
+`public/data/country-strengths/CC.json` uses country-affiliated publications for the five complete years before the snapshot. Primary topics group fields/subfields; normalized top-10% citation counts rank output. Impact-rate ranking divides highly cited output by papers and requires at least 100 papers. Counts include institutions outside the mapped selection. Internationally coauthored papers count in each represented country. These rankings describe the selected citation metric, not every dimension of research quality.
+
+`components/EvidencePanels.js` lazily loads per-entity records, ignores stale responses, supports retries, and offers initiative search/status/partnership filters and raw JSON downloads. `lib/evidence.mjs` centralizes aggregation and ranking. `npm run test:evidence` verifies complete snapshot coverage and recalculates every funding series; `npm test` checks missingness, duplicate/component handling, currency separation, equal allocation, date status and ranking thresholds. Browser tests cover responsive panels, navigation, errors and retries.
+
+Appearance is independent of Atlas/Survey/Engraving styles. System/Light/Dark is persisted locally as `atlas-color-mode`; a pre-paint script applies it before hydration. The canvas and HTML use the same resolved palette, and system changes update a System selection live.
