@@ -32,7 +32,7 @@ async function get(url) {
   const c = readJson(file);
   if (c) return c;
   for (let a = 0; a < 8; a++) {
-    const res = await fetch('https://api.openalex.org' + url + '&api_key=' + KEY, { headers: { 'User-Agent': 'netwrk-atlas/1.0' } });
+    const res = await fetch('https://api.openalex.org' + url + '&api_key=' + KEY, { headers: { 'User-Agent': 'research-atlas/1.0' } });
     if (res.status === 429 && Number(res.headers.get('x-ratelimit-remaining-usd') ?? 1) < 0.001) throw new Error('daily allowance used up; rerun later');
     if (res.status === 429 || res.status >= 500) { await new Promise((r) => setTimeout(r, 1000 * Number(res.headers.get('retry-after') || 2 * (a + 1)))); continue; }
     if (!res.ok) throw new Error('lookup failed ' + res.status);

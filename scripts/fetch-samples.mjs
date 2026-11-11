@@ -21,7 +21,7 @@ let calls = 0, stopped = false;
 
 async function fetchJson(url) {
   for (let a = 0; a < 4; a++) {
-    const res = await fetch('https://api.openalex.org' + url + (KEY ? '&api_key=' + KEY : ''), { headers: { 'User-Agent': 'netwrk-atlas/1.0' } });
+    const res = await fetch('https://api.openalex.org' + url + (KEY ? '&api_key=' + KEY : ''), { headers: { 'User-Agent': 'research-atlas/1.0' } });
     if (res.status === 429 && Number(res.headers.get('x-ratelimit-remaining') ?? 1) <= 0) { stopped = true; return null; }
     if (res.status === 429 || res.status >= 500) { await new Promise((r) => setTimeout(r, 1500 * (a + 1))); continue; }
     if (!res.ok) return null;

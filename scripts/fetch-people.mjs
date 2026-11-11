@@ -23,7 +23,7 @@ async function get(url) {
   { const c = readJson(file); if (c) return c; }
   if (stopped) return null;
   const key = process.env.OPENALEX_API_KEY || (fs.existsSync(path.join(ROOT, '.cache', 'openalex-key')) ? fs.readFileSync(path.join(ROOT, '.cache', 'openalex-key'), 'utf8').trim() : ''); // private, never published
-  const res = await fetch('https://api.openalex.org' + url + (key ? '&api_key=' + key : ''), { headers: { 'User-Agent': 'netwrk-atlas/1.0' } });
+  const res = await fetch('https://api.openalex.org' + url + (key ? '&api_key=' + key : ''), { headers: { 'User-Agent': 'research-atlas/1.0' } });
   if (res.status === 429 && Number(res.headers.get('x-ratelimit-remaining') ?? 1) <= 0) { stopped = true; console.warn('daily allowance used up; rerun later to continue'); return null; }
   if (res.status === 429) { await new Promise((r) => setTimeout(r, 3000)); return get(url); } // a brief throttle, not the daily limit
   if (!res.ok) { console.warn(res.status, url); return null; }

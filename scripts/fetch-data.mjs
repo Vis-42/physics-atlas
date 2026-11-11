@@ -61,7 +61,7 @@ async function get(url) {
   for (let attempt = 0; attempt < 6; attempt++) {
     // An OpenAlex key (OPENALEX_API_KEY) raises the daily allowance; it is never part of the cache key.
     const key = process.env.OPENALEX_API_KEY || (fs.existsSync(path.join(ROOT, '.cache', 'openalex-key')) ? fs.readFileSync(path.join(ROOT, '.cache', 'openalex-key'), 'utf8').trim() : ''); // private, never published
-    const res = await fetch(API + url + (key ? (url.includes('?') ? '&' : '?') + 'api_key=' + key : ''), { headers: { 'User-Agent': 'netwrk-physics-atlas/1.0' } });
+    const res = await fetch(API + url + (key ? (url.includes('?') ? '&' : '?') + 'api_key=' + key : ''), { headers: { 'User-Agent': 'research-atlas/1.0' } });
     if (res.status === 429 || res.status >= 500) {
       const body = await res.text();
       if (/budget|limit/i.test(body) && res.status === 429 && attempt > 2) throw new Error('OpenAlex budget exhausted: ' + body.slice(0, 300));

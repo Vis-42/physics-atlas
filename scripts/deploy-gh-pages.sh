@@ -25,7 +25,7 @@ if git diff --cached --quiet; then
   echo "No publication changes"
   exit 0
 fi
-git -c user.name="netwrk atlas deploy" -c user.email="deploy@users.noreply.github.com" commit -q -m "Publish atlas from $SOURCE_REV"
+git -c user.name="Research Atlas deploy" -c user.email="deploy@users.noreply.github.com" commit -q -m "Publish atlas from $SOURCE_REV"
 # One fast-forward update exposes all assets together; reject concurrent changes.
 git push origin HEAD:gh-pages
 echo "Published revision: $(git rev-parse HEAD)"

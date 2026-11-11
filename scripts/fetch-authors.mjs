@@ -36,7 +36,7 @@ function compact(r) {
 let remaining = Infinity, done = 0, failed = 0;
 async function get(url) {
   for (let t = 0; t < 6; t++) {
-    const res = await fetch(url, { headers: { 'User-Agent': 'netwrk-atlas/1.0' } }).catch(() => null);
+    const res = await fetch(url, { headers: { 'User-Agent': 'research-atlas/1.0' } }).catch(() => null);
     if (res && res.ok) { remaining = +(res.headers.get('x-ratelimit-remaining') ?? remaining); return res.json(); }
     if (res && res.status === 429 && remaining < 50) throw new Error('daily allowance used up');
     await new Promise((r) => setTimeout(r, 1000 * 2 ** t));

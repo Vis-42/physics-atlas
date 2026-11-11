@@ -1,4 +1,4 @@
-# netwrk Atlas: how it fits together
+# Research Atlas: how it fits together
 
 One canvas, one continuous zoom from the world down to one researcher. Nothing on the map is pre-drawn:
 every frame draws territories, roads, dots and labels from what is in memory (names, institutions,
@@ -108,7 +108,7 @@ Funding charts estimate new commitments by award start year, not annual revenue,
 
 `components/EvidencePanels.js` lazily loads per-entity records, ignores stale responses, supports retries, and offers initiative search/status/partnership filters and raw JSON downloads. `lib/evidence.mjs` centralizes aggregation and ranking. `npm run test:evidence` verifies complete snapshot coverage and recalculates every funding series; `npm test` checks missingness, duplicate/component handling, currency separation, equal allocation, date status and ranking thresholds. Browser tests cover responsive panels, navigation, errors and retries.
 
-Each map style owns its palette: Atlas uses cool daylight, Survey a dark technical palette, and Engraving warm paper. The bottom preview-card picker persists `atlas-style`, supports arrow-key radio navigation, and applies the same canvas/HTML palette before hydration. An old dark preference (or the system preference on first visit) initially selects Survey; an explicit style selection is then stable. On mobile the picker sits at the bottom of the visible map above the information sheet and hides while that sheet is expanded.
+The atlas has a single map style, Midnight (dark paper, light ink, a faint survey grid). Its palette lives in `SKIN` in `lib/theme.js` (canvas) and in the `:root` tokens in `app/globals.css` (HTML), so both agree before hydration. There is no style picker; older saved `atlas-style` preferences are cleared on load.
 
 ## Composable researcher filters and recruitment evidence
 

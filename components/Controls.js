@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import {analysis} from '../lib/analysis-map';
 import { toggleFilter } from '../lib/research-filters.mjs';
 import { A, subscribe, getVersion, go, goPerson, level, searchItems, loadPeopleIndex, setPhase, setResearchMode, selectNet } from '../lib/atlas';
-import { STYLE_OPTIONS, FAMILIES, YEARS, YEARS_LONG, famOf } from '../lib/theme';
+import { FAMILIES, YEARS, YEARS_LONG, famOf } from '../lib/theme';
 
 export const useAtlas = () => useSyncExternalStore(subscribe, getVersion, () => 0);
 const hue = (fam) => A.skin.hue[fam] || A.skin.neutral;
@@ -80,15 +80,14 @@ const PLATE = { world: 'Plate I · World', country: 'Plate II · Country', uni: 
 export function Key() {
   useAtlas();
   const [min, setMin] = useState(false);
-  const lv = level(), key = A.skin.key;
-  const title = { a: 'Key', b: 'Survey key', c: 'A physics atlas of the world' }[key];
+  const lv = level(), title = 'Key';
   const plate = PLATE[lv];
   if (analysis.active && A.researchMode === 'institutions') return null;
   if (A.researchMode !== 'institutions') return <div id="key"><div className="kt">Researcher map</div><div className="body"><p>Dot size: {A.researchMode.includes('frontier') ? 'recent top-10% papers' : A.researchMode.includes('career') ? 'career h-index' : 'evidence category (not vacancy count)'}</p><p>Lines: coauthorship in the sampled papers</p><p>Double bars: connection continues at the opposite edge</p><p>Orange ring: selected researcher</p></div></div>;
   return (
     <div id="key" className={min ? 'min' : ''}>
       <div className="kt">
-        <span>{key === 'c' ? title : title + ' · ' + plate.split(' · ')[1]}</span>
+        <span>{title + ' · ' + plate.split(' · ')[1]}</span>
         <button aria-label="Toggle key" onClick={() => setMin((m) => !m)}>{min ? 'Show' : 'Hide'}</button>
       </div>
       <div className="body">
@@ -121,24 +120,10 @@ export function Key() {
           <svg width="34" height="14" viewBox="0 0 34 14" stroke="currentColor" fill="none"><path d="M2 11 C 9 2, 25 2, 32 11" strokeWidth="1" /><path d="M2 11h30" strokeWidth=".6" strokeDasharray="2 2" /></svg>
           Map space: 60% research, 40% true area
         </div>}
-        <div className="src">{key === 'c' ? plate + ' · ' : ''}Sources: OpenAlex, {YEARS_LONG}{A.phase && A.phase.kind !== 'general' ? ' · View: ' + A.phase.short : ''}</div>
+        <div className="src">Sources: OpenAlex, {YEARS_LONG}{A.phase && A.phase.kind !== 'general' ? ' · View: ' + A.phase.short : ''}</div>
       </div>
     </div>
   );
-}
-
-export function Skins({ onChange }) {
-  useAtlas();
-  const choose=(e,i)=>{const keys={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1};let next;
-    if(e.key in keys)next=(i+keys[e.key]+STYLE_OPTIONS.length)%STYLE_OPTIONS.length;
-    else if(e.key==='Home')next=0;else if(e.key==='End')next=STYLE_OPTIONS.length-1;else return;
-    e.preventDefault();onChange(STYLE_OPTIONS[next].key);e.currentTarget.parentElement.querySelectorAll('[role="radio"]')[next].focus();};
-  return <div id="skins" role="radiogroup" aria-label="Map style">
-    {STYLE_OPTIONS.map((style,i)=><button key={style.key} role="radio" aria-label={style.name+' · '+style.tone} aria-checked={A.skin.key===style.key} tabIndex={A.skin.key===style.key?0:-1} data-skin={style.key} onClick={()=>onChange(style.key)} onKeyDown={e=>choose(e,i)} style={{'--swatch-paper':style.paper,'--swatch-ink':style.ink,'--swatch-accent':style.accent}}>
-      <svg className="style-preview" viewBox="0 0 48 36" aria-hidden="true"><rect width="48" height="36" rx="4" fill="var(--swatch-paper)"/><path d="M-5 30Q12 4 25 17T53 4M-6 22Q14 -2 30 12T56 0M-2 39Q10 13 26 26T54 14" fill="none" stroke="var(--swatch-ink)" opacity=".24" strokeWidth="1"/>{style.key==='b'&&<path d="M0 12H48M0 24H48M16 0V36M32 0V36" stroke="var(--swatch-ink)" opacity=".15"/>}<path d="M9 27Q19 9 37 13" fill="none" stroke="var(--swatch-accent)" strokeWidth="1.5"/><circle cx="16" cy="18" r="3" fill="var(--swatch-accent)"/><circle cx="35" cy="13" r="2" fill="var(--swatch-ink)"/></svg>
-      <span className="style-copy"><span className="style-name">{style.name}</span><small>{style.detail}</small></span><span className="style-check" aria-hidden="true">✓</span>
-    </button>)}
-  </div>;
 }
 
 // Views: all research (default), physics-related, or one field. Subfields and topics come from search.

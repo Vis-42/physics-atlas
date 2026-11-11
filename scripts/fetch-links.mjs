@@ -35,7 +35,7 @@ async function get(url) {
   if (stopped) return null;
   const key = process.env.OPENALEX_API_KEY || (fs.existsSync(path.join(ROOT, '.cache', 'openalex-key')) ? fs.readFileSync(path.join(ROOT, '.cache', 'openalex-key'), 'utf8').trim() : ''); // private, never published
   for (let attempt = 0; attempt < 4; attempt++) {
-    const res = await fetch(API + url + (key ? '&api_key=' + key : ''), { headers: { 'User-Agent': 'netwrk-physics-atlas/1.0' } });
+    const res = await fetch(API + url + (key ? '&api_key=' + key : ''), { headers: { 'User-Agent': 'research-atlas/1.0' } });
     if (res.status === 429) {
       const left = Number(res.headers.get('x-ratelimit-remaining') || 0);
       if (left <= 0 || attempt >= 2) { stopped = true; console.warn('daily allowance used up; rerun later to continue'); return null; }
