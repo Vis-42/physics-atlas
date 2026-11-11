@@ -1,7 +1,7 @@
 #!/bin/sh
 # Build a complete artifact and advance Pages once, retaining its previous revision.
 set -eu
-REPO="${1:-Vis-42/physics-atlas}"
+REPO="${1:-Vis-42/research-atlas}"
 NAME="${REPO#*/}"
 cd "$(dirname "$0")/.."
 SOURCE_REV="$(git rev-parse --verify HEAD 2>/dev/null || echo unknown)"

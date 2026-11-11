@@ -30,5 +30,5 @@ node scripts/build-analysis.mjs
 node scripts/build-index.mjs
 node scripts/build-atlas.mjs | tail -1
 du -sh .cache
-npx next build >/dev/null && sh scripts/deploy-gh-pages.sh Vis-42/physics-atlas
+npx next build >/dev/null && sh scripts/deploy-gh-pages.sh Vis-42/research-atlas
 echo "finished $(date)"
