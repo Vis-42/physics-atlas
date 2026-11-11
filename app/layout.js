@@ -23,7 +23,7 @@ export const viewport = { width: 'device-width', initialScale: 1, viewportFit: '
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-skin="a" suppressHydrationWarning>
-      <head><script dangerouslySetInnerHTML={{__html: "try{var m=localStorage.getItem('atlas-color-mode')||'system';document.documentElement.dataset.colorMode=(m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))?'dark':'light'}catch(e){}"}} /></head>
+      <head><script dangerouslySetInnerHTML={{__html: "try{var s=localStorage.getItem('atlas-style'),m=localStorage.getItem('atlas-color-mode');if(!['a','b','c'].includes(s))s=(m==='dark'||((!m||m==='system')&&matchMedia('(prefers-color-scheme: dark)').matches))?'b':'a';document.documentElement.dataset.skin=s;document.documentElement.dataset.colorMode=s==='b'?'dark':'light'}catch(e){}"}} /></head>
       <body>{children}</body>
     </html>
   );

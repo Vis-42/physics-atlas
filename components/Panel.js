@@ -8,6 +8,8 @@ import { fmt, fmtShort } from '../lib/util';
 import { useAtlas } from './Controls';
 import { FILTER_LABELS } from '../lib/research-filters.mjs';
 import { OpenEvidence, OpenCoverage } from './OpenEvidence';
+import {analysis} from '../lib/analysis-map';
+import {AnalysisSummary} from './Analysis';
 import { InstitutionEvidence, CountryStrengths } from './EvidencePanels';
 
 const hue = (fam) => A.skin.hue[fam] || A.skin.neutral;
@@ -486,6 +488,7 @@ function Body({ status }) {
   if (status !== 'ready') return (<><p className="kick">Loading</p><h1>Drawing the atlas</h1></>);
   if (A.researchMode !== 'institutions') return <ResearchPanel />;
   const lv = level(), v = A.view;
+  if (lv === 'world' && analysis.active) return <AnalysisSummary />;
   if (lv === 'world') return A.lite ? <><Lite inst={A.lite} /><World /></> : <World />;
   if (lv === 'country') return <Country c={v.country} />;
   if (lv === 'campus' || lv === 'uni') return <Uni u={v.uni} campus={lv === 'campus'} />;

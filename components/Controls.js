@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import {analysis} from '../lib/analysis-map';
 import { toggleFilter } from '../lib/research-filters.mjs';
-import { A, subscribe, getVersion, go, goPerson, level, searchItems, loadPeopleIndex, setPhase, setResearchMode, selectNet, setColorMode } from '../lib/atlas';
-import { FAMILIES, YEARS, YEARS_LONG, famOf } from '../lib/theme';
+import { A, subscribe, getVersion, go, goPerson, level, searchItems, loadPeopleIndex, setPhase, setResearchMode, selectNet } from '../lib/atlas';
+import { STYLE_OPTIONS, FAMILIES, YEARS, YEARS_LONG, famOf } from '../lib/theme';
 
 export const useAtlas = () => useSyncExternalStore(subscribe, getVersion, () => 0);
 const hue = (fam) => A.skin.hue[fam] || A.skin.neutral;
@@ -82,6 +83,7 @@ export function Key() {
   const lv = level(), key = A.skin.key;
   const title = { a: 'Key', b: 'Survey key', c: 'A physics atlas of the world' }[key];
   const plate = PLATE[lv];
+  if (analysis.active && A.researchMode === 'institutions') return null;
   if (A.researchMode !== 'institutions') return <div id="key"><div className="kt">Researcher map</div><div className="body"><p>Dot size: {A.researchMode.includes('frontier') ? 'recent top-10% papers' : A.researchMode.includes('career') ? 'career h-index' : 'evidence category (not vacancy count)'}</p><p>Lines: coauthorship in the sampled papers</p><p>Double bars: connection continues at the opposite edge</p><p>Orange ring: selected researcher</p></div></div>;
   return (
     <div id="key" className={min ? 'min' : ''}>
@@ -125,18 +127,18 @@ export function Key() {
   );
 }
 
-const SKIN_LIST = [['a', 'Atlas', '1'], ['b', 'Survey', '2'], ['c', 'Engraving', '3']];
 export function Skins({ onChange }) {
   useAtlas();
-  return (
-    <div id="skins" role="radiogroup" aria-label="Map style">
-      {SKIN_LIST.map(([k, name, n]) => (
-        <button key={k} role="radio" aria-checked={A.skin.key === k} data-skin={k} onClick={() => onChange(k)}>
-          <span className="lbl">{name}</span><kbd>{n}</kbd>
-        </button>
-      ))}
-    </div>
-  );
+  const choose=(e,i)=>{const keys={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1};let next;
+    if(e.key in keys)next=(i+keys[e.key]+STYLE_OPTIONS.length)%STYLE_OPTIONS.length;
+    else if(e.key==='Home')next=0;else if(e.key==='End')next=STYLE_OPTIONS.length-1;else return;
+    e.preventDefault();onChange(STYLE_OPTIONS[next].key);e.currentTarget.parentElement.querySelectorAll('[role="radio"]')[next].focus();};
+  return <div id="skins" role="radiogroup" aria-label="Map style">
+    {STYLE_OPTIONS.map((style,i)=><button key={style.key} role="radio" aria-label={style.name+' · '+style.tone} aria-checked={A.skin.key===style.key} tabIndex={A.skin.key===style.key?0:-1} data-skin={style.key} onClick={()=>onChange(style.key)} onKeyDown={e=>choose(e,i)} style={{'--swatch-paper':style.paper,'--swatch-ink':style.ink,'--swatch-accent':style.accent}}>
+      <svg className="style-preview" viewBox="0 0 48 36" aria-hidden="true"><rect width="48" height="36" rx="4" fill="var(--swatch-paper)"/><path d="M-5 30Q12 4 25 17T53 4M-6 22Q14 -2 30 12T56 0M-2 39Q10 13 26 26T54 14" fill="none" stroke="var(--swatch-ink)" opacity=".24" strokeWidth="1"/>{style.key==='b'&&<path d="M0 12H48M0 24H48M16 0V36M32 0V36" stroke="var(--swatch-ink)" opacity=".15"/>}<path d="M9 27Q19 9 37 13" fill="none" stroke="var(--swatch-accent)" strokeWidth="1.5"/><circle cx="16" cy="18" r="3" fill="var(--swatch-accent)"/><circle cx="35" cy="13" r="2" fill="var(--swatch-ink)"/></svg>
+      <span className="style-copy"><span className="style-name">{style.name}</span><small>{style.detail}</small></span><span className="style-check" aria-hidden="true">✓</span>
+    </button>)}
+  </div>;
 }
 
 // Views: all research (default), physics-related, or one field. Subfields and topics come from search.
@@ -209,16 +211,18 @@ function Subs({ ids, ph, pick }) {
 export function ResearchSwitch() {
   useAtlas();
   if (A.phase?.kind !== 'subfield') return null;
-  return <div id="research-mode" role="group" aria-label="Subfield map layers">
-    <span className="filter-hint">Match all selected</span>
-    {[['institutions','Institutions'],['career','Career leaders'],['frontier','Frontier now'],['open','Open to researchers']].map(([mode,label]) =>
-      <button key={mode} aria-pressed={A.researchMode.split('+').includes(mode)} onClick={() => setResearchMode(mode === 'institutions' ? mode : toggleFilter(A.researchMode,mode))}>{label}</button>)}
+  const people=A.researchMode!=='institutions', selected=A.researchMode.split('+');
+  return <div id="research-mode">
+    <div className="map-focus" role="group" aria-label="Map focus"><span className="control-label">Explore</span>
+      <button aria-pressed={!people} onClick={()=>setResearchMode('institutions')}>Institutions</button>
+      <button aria-pressed={people} onClick={()=>setResearchMode(A.lastResearchMode||'career')}>Researchers</button>
+    </div>
+    {people&&<fieldset className="research-criteria"><legend>Researcher filters</legend><div className="criteria-options">
+      {[['career','Career leaders','Career impact'],['frontier','Frontier now','Recent impact'],['open','Open to researchers','Recruitment evidence']].map(([mode,label,description])=>{
+        const checked=selected.includes(mode);return <label key={mode} className={'criterion'+(checked?' chosen':'')}>
+          <input type="checkbox" aria-label={label} checked={checked} disabled={checked&&selected.length===1} onChange={()=>setResearchMode(toggleFilter(A.researchMode,mode))}/>
+          <span>{label}<small>{description}</small></span></label>;
+      })}</div><p className="filter-hint">{selected.length>1?'Match all '+selected.length+' selected requirements':'Choose one or more requirements'}</p>
+    </fieldset>}
   </div>;
-}
-
-export function ColorMode() {
-  useAtlas();
-  return <label id="color-mode"><span>Theme</span><select aria-label="Color mode" value={A.colorMode} onChange={e=>setColorMode(e.target.value)}>
-    <option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option>
-  </select></label>;
 }

@@ -49,7 +49,7 @@ function InstitutionContent({data,institution,path}){
    <Trend rows={group.years.map(r=>({...r,partial:r.year===data.endYear}))} currency={currency} label="Estimated share of new award commitments"/>
    <p className="srcline">{fmt(group.awards)} monetary award records in {currency}. {fmt(data.funding.missingAmounts)} records lack usable amounts or recipient attribution; {fmt(data.funding.excludedComponents)} component awards excluded.</p>
   </>:<p className="lede">No usable reported monetary amounts in this snapshot. This does not mean the institution has no funding.</p>}
-  <details className="e-method"><summary>Estimate and coverage</summary><p>{data.method}</p><p>{data.coverage}</p><p>Data coverage can change over time. YTD amounts are not compared with full years. No currency conversion or inflation adjustment is applied.</p><a href="https://help.openalex.org/data/awards/" target="_blank" rel="noreferrer">Award data definitions ↗</a></details>
+  <details className="e-method"><summary>Estimate and coverage</summary><p>{data.method}</p><p>Component awards are excluded even when their parent is outside this institution’s snapshot. Multiple listed recipients may reflect joint affiliations rather than a formal partnership agreement.</p><p>{data.coverage}</p><p>Data coverage can change over time. YTD amounts are not compared with full years. No currency conversion or inflation adjustment is applied.</p><a href="https://help.openalex.org/data/awards/" target="_blank" rel="noreferrer">Award data definitions ↗</a></details>
   <h3>Grant-linked research activity</h3><p className="lede">Publications with an institutional affiliation and a recorded grant link. This is a research indicator, not a monetary estimate or proof that this institution received the grant.</p>
   {data.indicator.some(r=>r.linked>0)?<Trend rows={data.indicator.map(r=>({year:r.year,value:r.linked}))} label="Grant-linked publications"/>:<p className="lede">No grant-linked publications were identified in the indexed records for this period.</p>}
   <p className="srcline">{fmt(data.indicator.reduce((s,r)=>s+r.linked,0))} grant-linked of {fmt(data.indicator.reduce((s,r)=>s+r.papers,0))} indexed publications, {data.startYear}–{data.endYear-1}. Missing grant acknowledgments and coauthorship limit interpretation.</p>
@@ -57,7 +57,7 @@ function InstitutionContent({data,institution,path}){
   <p className="lede">Documented funded projects, programs and partnerships. {data.coverage}</p>
   <label className="e-filter">Search initiatives<input type="search" aria-label="Search initiatives" placeholder="Project, funder or partner" value={query} onChange={e=>reset(setQuery,e.target.value)}/></label>
   <label className="e-filter">Status at snapshot <select aria-label="Initiative status" value={status} onChange={e=>reset(setStatus,e.target.value)}><option value="all">All records</option><option value="active">Active</option><option value="ended">Ended</option><option value="upcoming">Upcoming</option><option value="unknown">Dates incomplete</option></select></label>
-  <label className="e-check"><input type="checkbox" checked={partnership} onChange={e=>reset(setPartnership,e.target.checked)}/>Named institutional partnerships only</label>
+  <label className="e-check"><input type="checkbox" checked={partnership} onChange={e=>reset(setPartnership,e.target.checked)}/>Multiple institutions listed</label>
   <p role="status" className="srcline">{fmt(filtered.length)} matching initiatives</p>
   <ul className="initiative-list">{filtered.slice(0,limit).map(p=>{
    const partners=p.recipients.filter(r=>r.id!==institution.id);
@@ -65,7 +65,7 @@ function InstitutionContent({data,institution,path}){
     <p>{p.funder}{p.scheme?' · '+p.scheme:''}</p><p className="srcline">{p.start||'Start unknown'} – {p.end||'End unknown'} · {({active:'Active at snapshot',ended:'Ended',upcoming:'Upcoming',unknown:'Dates incomplete'})[projectStatus(p,data.asOf)]}</p>
     {Number.isFinite(p.amount)&&p.amount>0&&p.currency&&<p>Reported award: <strong>{money(p.amount,p.currency)}</strong>{partners.length>0?' · whole project, not an institution-specific allocation':''}</p>}
     {p.topic&&<p className="srcline">{p.topic}</p>}
-    {partners.length>0&&<div className="initiative-partners"><span>Named partners:</span>{partners.map(r=>{const u=A.W.uniById.get(r.id);return u?<button className="e-link" key={r.id} onClick={()=>go('uni',u)}>{r.name}</button>:<a key={r.id} href={'https://openalex.org/'+r.id} target="_blank" rel="noreferrer">{r.name} ↗</a>})}</div>}
+    {partners.length>0&&<div className="initiative-partners"><span>Other institutions listed on this award:</span>{partners.map(r=>{const u=A.W.uniById.get(r.id);return u?<button className="e-link" key={r.id} onClick={()=>go('uni',u)}>{r.name}</button>:<a key={r.id} href={'https://openalex.org/'+r.id} target="_blank" rel="noreferrer">{r.name} ↗</a>})}</div>}
     <p className="srcline">Source: {p.provenance} via OpenAlex{p.parents.length?' · component award':''}</p>
    </li>
   })}</ul>

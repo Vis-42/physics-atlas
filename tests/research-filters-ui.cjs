@@ -1,13 +1,15 @@
+const {selectResearchFilters}=require('./ui-helpers.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs');const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');const BASE=process.env.TEST_BASE_URL||'http://localhost:3124';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../public/data/'+p,'file://'+__filename)));const ids={career:new Set(read('net/s2718.json').people.map(p=>p[0])),frontier:new Set(read('frontier/s2718.json').people.map(p=>p.id)),open:new Set(read('open/s2718.json').people.map(p=>p.id))};
 (async()=>{const b=await chromium.launch({executablePath:process.env.CHROME_BIN||undefined,headless:true});const errors=[];
 for(const [name,width,height] of [['desktop',1440,900],['mobile',390,844]]){const p=await b.newPage({viewport:{width,height}});p.on('pageerror',e=>errors.push(e.message));await p.goto(BASE+'/#s2718:world',{waitUntil:'networkidle'});
 for(const mode of ['career','frontier','open','career+frontier','career+open','frontier+open','career+frontier+open']){
- await p.getByRole('button',{name:'Institutions',exact:true}).click();for(const f of mode.split('+'))await p.getByRole('button',{name:{career:'Career leaders',frontier:'Frontier now',open:'Open to researchers'}[f],exact:true}).click();
+ await p.getByRole('button',{name:'Institutions',exact:true}).click();assert.equal(await p.getByRole('checkbox').count(),0);await selectResearchFilters(p,mode);
  const expected=[...ids[mode.split('+')[0]]].filter(id=>mode.split('+').every(f=>ids[f].has(id))).length;
  await p.getByText(new RegExp('^'+expected+' researchers? ·')).waitFor();await p.waitForTimeout(150);assert(p.url().endsWith('~'+mode));
- for(const [f,label] of Object.entries({career:'Career leaders',frontier:'Frontier now',open:'Open to researchers'}))assert.equal(await p.getByRole('button',{name:label,exact:true}).getAttribute('aria-pressed'),String(mode.split('+').includes(f)));
+ for(const [f,label] of Object.entries({career:'Career leaders',frontier:'Frontier now',open:'Open to researchers'}))assert.equal(await p.getByRole('checkbox',{name:label,exact:true}).isChecked(),mode.split('+').includes(f));
 }
+ await p.getByRole('button',{name:'Institutions',exact:true}).click();await p.getByRole('button',{name:'Researchers',exact:true}).click();assert.equal(await p.getByRole('checkbox',{name:'Open to researchers',exact:true}).isChecked(),true);
  await p.reload({waitUntil:'networkidle'});await p.getByText(/1 researchers? ·/).waitFor();await p.locator('#panel .rows .rowb').first().click();await p.getByRole('heading',{name:'Recruitment evidence',exact:true}).waitFor();assert(await p.getByRole('link',{name:'Official evidence and application instructions ↗',exact:true}).count()>=1);assert((await p.locator('#panel').innerText()).includes('structured form'));
  await p.screenshot({path:'/tmp/research-filters-'+name+'.png'});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await p.getByRole('button',{name:'View institution funding & initiatives',exact:true}).click();await p.getByRole('heading',{name:'Funding & research initiatives',exact:true}).waitFor();
